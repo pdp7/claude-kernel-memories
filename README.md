@@ -34,7 +34,7 @@ Two install patterns:
 
 ### All of it
 
-    git clone https://github.com/tt-fustini/claude-kernel-memories.git \
+    git clone https://github.com/pdp7/claude-kernel-memories.git \
         ~/src/claude-kernel-memories
     cd ~/.claude/projects/-home-YOU-src-linux/memory/
     ln -s ~/src/claude-kernel-memories/feedback_*.md .
