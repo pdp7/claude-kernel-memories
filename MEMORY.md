@@ -1,0 +1,30 @@
+- [ORC mbox workaround](feedback_orc_mbox.md): create_changes.py needs manual commit-message.json for mbox inputs
+- [Use b4 for lore](feedback_lore_access.md): WebFetch fails on lore.kernel.org, use `b4 mbox` instead
+- [Separate commits](feedback_separate_commits.md): one commit per logical change, don't bundle
+- [Kernel log levels in QoS/CBQRI](feedback_keep_debug_prints.md): `pr_err`/`pr_warn` are default-visible, `pr_info`/`pr_debug` are opt-in
+- [Build with LLVM](feedback_build_llvm.md): always LLVM=1 W=1, never GCC, use `./llvm.sh`
+- [Build matrix sequential](feedback_build_sequential.md): 16-core box, run builds sequentially with -j16 each
+- [Kbuild O= needs clean srctree](feedback_kbuild_o_worktree.md): when source tree is not clean, use a linked worktree at HEAD, not `mrproper`
+- [Ready-to-send gates](feedback_ready_to_send_gates.md): before saying ready, run checkpatch --strict, sparse, and `./build-matrix.sh`
+- [Don't ask permission](feedback_dont_ask_permission.md): just proceed with git ops, don't block waiting for confirmation
+- [Reduce permission prompts](feedback_reduce_permissions.md): batch commands, never split read-only git ops
+- [Mon event ordering](feedback_mon_event_ordering.md): enable_mon_event BEFORE online_mon_domain, or rmid_busy_llc is NULL
+- [Use git worktrees](feedback_use_worktrees.md): always use worktrees, never switch branches in main working dir
+- [Branch naming for gitlab](feedback_branch_naming.md): `<user>/<soc>-<topic>`, e.g. `dfustini/atl-cbqri-test`
+- [Use b4 for cover letters](feedback_b4_cover.md): `b4 prep --edit-cover`, non-interactive override via GIT_CONFIG_COUNT
+- [Cover letter style](feedback_cover_letter_style.md): six patterns for kernel cover letters
+- [No refactor commits in a series](feedback_no_refactor_in_series.md): shape follows logical fit for a fresh reviewer, not dev timeline
+- [Splitting a large kernel commit](feedback_split_large_commit.md): feature axis with alloc/mon sub-split, scaffolding patch first
+- [resctrl_arch_get_num_closid for unpicked rids](feedback_resctrl_arch_get_num_closid.md): NULL-check ctrl before deref
+- [OpenSBI archive purpose](feedback_opensbi_archive_purpose.md): broad awareness for NotebookLM audio digests
+- [No em-dash, no `-`/`;` mid-sentence](feedback_no_em_dash.md): use `,` or shorter sentences in prose, code, commits, docs
+- [Changelog: no dev timeline](feedback_changelog_no_dev_timeline.md): "Changes in vN" describes v(N) state vs v(N-1), never dev process
+- [Minimize fs/resctrl changes](feedback_minimize_fs_resctrl_changes.md): don't touch fs/resctrl in cbqri series unless cbqri needs it
+- [Skip checkpatch on b4 cover](feedback_skip_checkpatch_cover.md): cover-letter commit trips checkpatch, scope loops to `start-commit..HEAD`
+- [Use American English](feedback_american_english.md): default to color/behavior/serialize/organization
+- [Trailer order](feedback_trailer_order.md): `Assisted-by:` goes before `Signed-off-by:`, SoB always last
+- [Single space after sentences](feedback_single_space_sentences.md): one space after period, never two
+- [No @symbol in non-kernel-doc](feedback_no_at_in_regular_comments.md): reserve `@name` for kernel-doc
+- [Don't say "Mirrors X"](feedback_no_mirrors_attribution.md): drop "Mirrors MPAM's foo()" framing
+- [No patch refs in code comments](feedback_no_patch_refs_in_comments.md): "this patch"/"later patch" make no sense at HEAD
+- [Terse for kernel devs](feedback_kernel_terse.md): commits/comments target experienced devs, don't narrate or teach basics
