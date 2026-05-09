@@ -8,6 +8,20 @@ mechanics, b4 quirks, and code-comment conventions.
 The rules came out of real upstream review cycles, not a whiteboard. Most
 generalize beyond RISC-V to any kernel subsystem.
 
+## In practice
+
+A concrete example from April 2026. A maintainer reviewing my QoS series
+asked me to split a 2700-line driver patch into reviewable pieces. The
+first split Claude proposed was layered, HW callbacks in one patch and
+resctrl wiring in another, which would have left several functions dead
+until later patches and forced `__maybe_unused` to keep W=1 clean. I
+rejected that and asked for a feature-axis split with a scaffolding patch
+carrying stubs first, then real implementations replacing stub bodies in
+later patches. Claude saved the redirection as `feedback_split_large_commit.md`.
+The next time a similar split came up, Claude went straight to the
+feature-axis shape, no dead code, no `__maybe_unused`, W=1 clean per
+commit. The lesson stuck without me having to teach it twice.
+
 ## What this is
 
 Claude Code has a file-based auto-memory system [2]. At session start, Claude
