@@ -1,0 +1,4 @@
+- [Kernel log levels in QoS/CBQRI](feedback_keep_debug_prints.md): `pr_err`/`pr_warn` are default-visible, `pr_info`/`pr_debug` are opt-in
+- [Mon event ordering](feedback_mon_event_ordering.md): enable_mon_event BEFORE online_mon_domain, or rmid_busy_llc is NULL
+- [Minimize fs/resctrl changes](feedback_minimize_fs_resctrl_changes.md): don't touch fs/resctrl in cbqri series unless cbqri needs it
+- [resctrl_arch_get_num_closid for unpicked rids](feedback_resctrl_arch_get_num_closid.md): NULL-check ctrl before deref

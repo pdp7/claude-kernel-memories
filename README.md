@@ -34,6 +34,21 @@ working directory after the v1 to v4 cycle of an upstream RISC-V kernel
 series. The files are markdown with a small YAML frontmatter block. There
 is no executable code here.
 
+## Layout
+
+The repo is split into two sets so users who don't work on resctrl can
+take only the general rules:
+
+- Root `feedback_*.md`, general kernel-development rules (build, series
+  mechanics, code-comment conventions, personal voice). Useful for any
+  kernel subsystem.
+- `resctrl/feedback_*.md`, rules specific to the resctrl filesystem,
+  RISC-V CBQRI, and adjacent MPAM/QoS work. Skip this directory unless
+  you're touching `fs/resctrl/`, `drivers/resctrl/`, or an arch's QoS
+  controller code.
+
+Each directory has its own `MEMORY.md` index.
+
 ## Install
 
 The memory directory lives at:
@@ -44,9 +59,9 @@ where `<mangled-tree-path>` is your kernel tree's absolute path with `/`
 replaced by `-`. For `/home/alice/src/linux`, the mangled path is
 `-home-alice-src-linux`. Claude Code creates this directory on first run.
 
-Two install patterns:
+Three install patterns:
 
-### All of it
+### General rules only (most users)
 
     git clone https://github.com/pdp7/claude-kernel-memories.git \
         ~/src/claude-kernel-memories
@@ -54,7 +69,22 @@ Two install patterns:
     ln -s ~/src/claude-kernel-memories/feedback_*.md .
     ln -s ~/src/claude-kernel-memories/MEMORY.md .
 
-Pull updates with `git -C ~/src/claude-kernel-memories pull`.
+The glob only matches the root `feedback_*.md` files, not the ones under
+`resctrl/`. Pull updates with `git -C ~/src/claude-kernel-memories pull`.
+
+### General plus resctrl/CBQRI
+
+    git clone https://github.com/pdp7/claude-kernel-memories.git \
+        ~/src/claude-kernel-memories
+    cd ~/.claude/projects/-home-YOU-src-linux/memory/
+    ln -s ~/src/claude-kernel-memories/feedback_*.md .
+    ln -s ~/src/claude-kernel-memories/resctrl/feedback_*.md .
+    # merge the two indexes into one MEMORY.md
+    cat ~/src/claude-kernel-memories/MEMORY.md \
+        ~/src/claude-kernel-memories/resctrl/MEMORY.md > MEMORY.md
+
+Claude loads a single `MEMORY.md` per project, so concatenate rather than
+symlinking both.
 
 ### Cherry-pick
 
@@ -66,16 +96,18 @@ Pull updates with `git -C ~/src/claude-kernel-memories pull`.
 ## What's in here
 
 Each file is a self-contained rule with **Why** (the reasoning) and **How to
-apply** (when it kicks in). Categories:
+apply** (when it kicks in).
 
-### Build and workspace
+### General rules (root)
+
+#### Build and workspace
 
 - `feedback_build_llvm.md` LLVM=1 W=1, never GCC, never blanket -Werror or W=2
 - `feedback_use_worktrees.md` Always git worktree, never switch branches in main tree
 - `feedback_build_sequential.md` Sequential -j16 builds beat parallel on a 16-core box
 - `feedback_kbuild_o_worktree.md` Kbuild O= rejects dirty srctree, use a linked worktree, do not mrproper
 
-### Series mechanics
+#### Series mechanics
 
 - `feedback_branch_naming.md` `<user>/<chip>-<topic>` for shared push targets
 - `feedback_b4_cover.md` Use `b4 prep --edit-cover`, not manual amend, with a non-interactive trick
@@ -84,7 +116,7 @@ apply** (when it kicks in). Categories:
 - `feedback_ready_to_send_gates.md` checkpatch --strict, sparse, and a 6-config build matrix before "ready to send"
 - `feedback_orc_mbox.md` ORC's `create_changes.py` needs a manual `commit-message.json` for mbox inputs
 
-### Series shape
+#### Series shape
 
 - `feedback_separate_commits.md` One logical change per commit
 - `feedback_no_refactor_in_series.md` No refactor-of-same-series-code commits, fold into the originating patch
@@ -92,14 +124,13 @@ apply** (when it kicks in). Categories:
 - `feedback_changelog_no_dev_timeline.md` Cover changelog describes v(N) state, not the dev timeline of v(N)
 - `feedback_cover_letter_style.md` Six patterns for kernel cover letters
 
-### Code style
+#### Code style
 
 - `feedback_kernel_terse.md` Audience is experienced kernel devs, no narration
-- `feedback_keep_debug_prints.md` Pick the right `pr_*` level, do not strip debug prints
 - `feedback_no_patch_refs_in_comments.md` "this patch", "later patch" make no sense at HEAD
 - `feedback_no_at_in_regular_comments.md` `@name` is reserved for kernel-doc
 
-### Personal voice (optional, take what you like)
+#### Personal voice (optional, take what you like)
 
 - `feedback_no_em_dash.md` No em-dash, no `-` or `;` mid-sentence in prose
 - `feedback_single_space_sentences.md` One space after a period, never two
@@ -108,9 +139,20 @@ apply** (when it kicks in). Categories:
 - `feedback_no_mirrors_attribution.md` Drop "Mirrors MPAM's foo()" framing
 - `feedback_dont_ask_permission.md` Just proceed with git ops, do not block on confirmation
 - `feedback_reduce_permissions.md` Batch read-only commands
+- `feedback_opensbi_archive_purpose.md` Read OpenSBI list archive broadly, do not filter to current series
 
 The voice rules are personal. Pick the ones that match how you write, ignore
 the rest.
+
+### resctrl, CBQRI, and QoS rules (`resctrl/`)
+
+Skip this set unless you're touching `fs/resctrl/`, `drivers/resctrl/`,
+RISC-V CBQRI, or another arch's QoS controller code.
+
+- `resctrl/feedback_mon_event_ordering.md` `resctrl_enable_mon_event()` must precede `resctrl_online_mon_domain()`, or `rmid_busy_llc` stays NULL
+- `resctrl/feedback_resctrl_arch_get_num_closid.md` fs/resctrl invokes this on rids the arch may not back, NULL-check `hw_res->ctrl` first
+- `resctrl/feedback_minimize_fs_resctrl_changes.md` Don't touch `fs/resctrl/` in a CBQRI series unless CBQRI needs it; QoL fixes go in a separate fs/resctrl series
+- `resctrl/feedback_keep_debug_prints.md` Pick the right `pr_*` level for QoS/CBQRI debug prints; do not strip them
 
 ## What's not in here
 
